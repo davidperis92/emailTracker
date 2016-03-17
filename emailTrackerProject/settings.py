@@ -38,8 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',
-    'multi_email_field',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -58,7 +56,7 @@ ROOT_URLCONF = 'emailTrackerProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR+'/emailTracker/templates/emailTracker/',],
+        'DIRS': [BASE_DIR+'/emailTracker/templates/emailTracker/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
