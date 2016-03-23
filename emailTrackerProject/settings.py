@@ -25,19 +25,22 @@ SECRET_KEY = '*#vi9occj^9bz#2x_(m(x_+(*ge-c)g=%y7-_c6(du7n&zttxl'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# SECURE_SSL_REDIRECT = True
+
 ALLOWED_HOSTS = []
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'emailTracker.apps.EmailtrackerConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'emailTracker.apps.EmailtrackerConfig',
+    'sslserver',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -77,8 +80,12 @@ WSGI_APPLICATION = 'emailTrackerProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'emailtracker',
+        'USER': 'emailtrackeradmin',
+        'PASSWORD': 'pass1234',
+        'HOST': 'localhost',
+        'PORT': ''
     }
 }
 
@@ -105,9 +112,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-ES'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'CET'
 
 USE_I18N = True
 

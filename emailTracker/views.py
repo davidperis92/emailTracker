@@ -1,18 +1,39 @@
 import requests
+import json
+import re
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import View, TemplateView
+from django.views.decorators.csrf import csrf_exempt
 from emailTracker.forms import LoginForm
-from emailTracker.models import TaigaUser, Email
+from emailTracker.models import Email
 
 
-class HomeView(TemplateView):
-    model = TaigaUser
-    template_name = 'emailTracker/home.html'
-    context_object_name = 'taiga_user'
+@csrf_exempt
+def email(request):
 
-    # return TaigaUser.objects.filter(user_id=request.session('user_id'))
+    if request.method == 'POST':
+        email_data = json.loads(request.body.decode())
+        email_address_matcher = re.compile(r'\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b')
+        sender = re.search(email_address_matcher, email_data['headers']['From'])
+        receivers = re.findall(email_address_matcher, email_data['headers']['To'])
+        copy_receivers = re.findall(email_address_matcher, email_data['headers']['Cc'])
+        Email.objects.create(
+            subject=email_data['headers']['Subject'],
+            text_html=email_data['html'],
+            text_plain=email_data['plain']
+        )
+
+
+class HomeView(View):
+
+    def get(self, request, *args, **kwargs):
+
+        if request.session.get('taiga_user_data') is None:
+            return HttpResponseRedirect(reverse('emailTracker:login'))
+        else:
+            return render(request, 'emailTracker/home.html')
 
 
 class ResultsView(TemplateView):
@@ -47,14 +68,9 @@ def login(request):
             auth = authentication(username, password)
 
             if auth.status_code == requests.codes.ok:
-                jsonObj = auth.json()
-                user_id = jsonObj['id']
-                if not TaigaUser.objects.filter(user_id=user_id):
-                    token = jsonObj['auth_token']
-                    email = jsonObj['email']
-                    TaigaUser.objects.create(user_id=user_id, username=username, token=token, email=email)
-
-                request.session['user_id'] = user_id    # Initializes Session
+                taiga_user_data = auth.json()
+                request.session.flush()
+                request.session['taiga_user_data'] = taiga_user_data
                 return HttpResponseRedirect(reverse('emailTracker:home'))
 
     return render(request, 'emailTracker/login.html', {

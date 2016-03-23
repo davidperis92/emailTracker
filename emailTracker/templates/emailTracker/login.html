@@ -10,7 +10,7 @@
         <h3 class="text-muted">Login</h3>
       </div>
       <hr />
-        <form role="form" action="/emailTracker/login" method="post">
+        <form role="form" action="/emailTracker/login/" method="post">
           {% csrf_token %} <!-- CSRF token is rendered by Django in forms to avoid CSRF attacks -->
           {{ form.as_p }}
     		  <input type="submit" class="btn btn-default" value="Submit" />
