@@ -10,9 +10,9 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class Email(models.Model):
-    task_id = models.IntegerField()
-    project_id = models.IntegerField()
-    user_story_id = models.IntegerField()
+    task_id = models.IntegerField(blank=True, null=True)
+    project_id = models.IntegerField(blank=True, null=True)
+    user_story_id = models.IntegerField(blank=True, null=True)
 
     sender = models.EmailField()
     receivers = ArrayField(models.EmailField())

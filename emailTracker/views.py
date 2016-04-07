@@ -1,8 +1,9 @@
 import requests
 import json
 import re
+from datetime import datetime
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic import View, TemplateView
 from django.views.decorators.csrf import csrf_exempt
@@ -16,14 +17,37 @@ def email(request):
     if request.method == 'POST':
         email_data = json.loads(request.body.decode())
         email_address_matcher = re.compile(r'\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b')
-        sender = re.search(email_address_matcher, email_data['headers']['From'])
-        receivers = re.findall(email_address_matcher, email_data['headers']['To'])
-        copy_receivers = re.findall(email_address_matcher, email_data['headers']['Cc'])
+        sender = re.search(email_address_matcher, email_data['headers']['From']).group()
+
+        if 'To' in email_data['headers']:
+            receivers = re.findall(email_address_matcher, email_data['headers']['To'])
+        else:
+            receivers = []
+
+        if 'Cc' in email_data['headers']:
+            copy_receivers = re.findall(email_address_matcher, email_data['headers']['Cc'])
+        else:
+            copy_receivers = []
+
+        text_html = text_plain = ''
+        if email_data['html'] is not None:
+            text_html = email_data['html']
+        if email_data['plain'] is not None:
+            text_plain = email_data['plain']
+
+        date = datetime.strptime(email_data['headers']['Date'], '%a, %d %b %Y %H:%M:%S %z')
+
         Email.objects.create(
+            sender=sender,
+            receivers=receivers,
+            copy_receivers=copy_receivers,
             subject=email_data['headers']['Subject'],
-            text_html=email_data['html'],
-            text_plain=email_data['plain']
+            text_html=text_html,
+            text_plain=text_plain,
+            date=date
         )
+
+        return HttpResponse()
 
 
 class HomeView(View):
