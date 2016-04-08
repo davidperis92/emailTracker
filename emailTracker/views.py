@@ -29,6 +29,10 @@ def email(request):
         else:
             copy_receivers = []
 
+        project_name_matcher = re.compile(r'\b\[[a-zA-Z0-9._%+-]+\]\b')
+        project_name = re.findall(email_address_matcher, email_data['headers']['Subject'])
+        project_id = getProjectIdByName(project_name, request)
+
         text_html = text_plain = ''
         if email_data['html'] is not None:
             text_html = email_data['html']
@@ -38,6 +42,7 @@ def email(request):
         date = datetime.strptime(email_data['headers']['Date'], '%a, %d %b %Y %H:%M:%S %z')
 
         Email.objects.create(
+            project_id=project_id,
             sender=sender,
             receivers=receivers,
             copy_receivers=copy_receivers,
@@ -112,6 +117,16 @@ def authentication(user, password):
 
     return requests.post('http://178.62.226.174:81/api/v1/auth', data=data)
 
+def getProjectIdByName(name, request):
+    data = {
+        "Content-Type": 'application/json',
+        "Authorization": 'Bearer '+ request.session['taiga_user_data']['auth_token']
+    }
+    projects = requests.get('http://178.62.226.174:81/api/v1/projects/', data=data)
+    for project in projects:
+        if(project['name'] == name):
+            return project['id']
+    return null
 
 def getTask(task_id):
     return requests.get('http://178.62.226.174:81/api/v1/tasks/' + task_id)
