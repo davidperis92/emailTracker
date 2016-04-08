@@ -1,1 +1,2 @@
 requests==2.9.1
+django-bootstrap3==7.0.1

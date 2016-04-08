@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'emailTracker.apps.EmailtrackerConfig',
-    'sslserver',
+    'bootstrap3'
 ]
 
 MIDDLEWARE_CLASSES = [
