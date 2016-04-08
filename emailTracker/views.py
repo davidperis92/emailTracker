@@ -80,8 +80,11 @@ class ResultsView(TemplateView):
 
 def login(request):
 
+    authentication_error = False
+
     if request.method == 'GET':
         form = LoginForm()
+        form.helper.form_action = reverse('emailTracker:login')
     else:
         # A POST request: Handle Form Upload
         form = LoginForm(request.POST)  # Bind data from request.POST into a PostForm
@@ -96,9 +99,12 @@ def login(request):
                 request.session.flush()
                 request.session['taiga_user_data'] = taiga_user_data
                 return HttpResponseRedirect(reverse('emailTracker:home'))
+            else:
+                authentication_error = True
 
     return render(request, 'emailTracker/login.html', {
         'form': form,
+        'authentication_error': authentication_error
     })
 
 
