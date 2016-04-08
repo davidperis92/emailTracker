@@ -18,7 +18,7 @@ def email(request):
         email_data = json.loads(request.body.decode())
         email_address_matcher = re.compile(r'\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b')
         sender = re.search(email_address_matcher, email_data['headers']['From']).group()
-
+        import pdb; pdb.set_trace()
         if 'To' in email_data['headers']:
             receivers = re.findall(email_address_matcher, email_data['headers']['To'])
         else:
@@ -29,10 +29,10 @@ def email(request):
         else:
             copy_receivers = []
 
-        project_name_matcher = re.compile(r'\b\[[a-zA-Z0-9._%+-]+\]\b')
+        project_name_matcher = re.compile(r'\b\[[a-zA-Z0-9._%+-\[\]]+\]\b')
         project_name = re.findall(email_address_matcher, email_data['headers']['Subject'])
         project_id = getProjectIdByName(project_name, request)
-
+        import pdb; pdb.set_trace()
         text_html = text_plain = ''
         if email_data['html'] is not None:
             text_html = email_data['html']
@@ -95,7 +95,7 @@ def login(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             auth = authentication(username, password)
-
+            #import pdb; pdb.set_trace()
             if auth.status_code == requests.codes.ok:
                 taiga_user_data = auth.json()
                 request.session.flush()
