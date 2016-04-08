@@ -1,20 +1,24 @@
 <html lang="en">
   <head>
-    <!-- Link to the Bootstrap CSS from a CDN -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
-          rel="stylesheet">
+    {% load bootstrap3 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% bootstrap_messages %}
   </head>
   <body>
     <div class="container">
-      <div class="header">
-        <h3 class="text-muted">Login</h3>
-      </div>
-      <hr />
-        <form role="form" action="/emailTracker/login/" method="post">
-          {% csrf_token %} <!-- CSRF token is rendered by Django in forms to avoid CSRF attacks -->
-          {{ form.as_p }}
-    		  <input type="submit" class="btn btn-default" value="Submit" />
-  	    </form>
+      <div class="row">
+        <div class="col-xs-offset-1 col-xs-10
+                    col-sm-offset-2 col-sm-8
+                    col-md-offset-3 col-md-6
+                    col-lg-offset-4 col-lg-4">
+          <h1>Login</h1>
+          <form role="form" action="/emailTracker/login/" method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons submit='Entrar' %}{% endbuttons %}
+          </form>
+        </div>
       </div>
     </div>
   </body>
