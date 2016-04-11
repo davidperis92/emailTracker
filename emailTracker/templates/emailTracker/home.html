@@ -1,3 +1,5 @@
-<h1>{{ request.session.taiga_user_data.full_name }}</h1>
+{% extends "base.html" %}
 
-{% include "components/searcher.html" %}
+{% block content %}
+    {% include "components/searcher.html" %}
+{% endblock content %}
