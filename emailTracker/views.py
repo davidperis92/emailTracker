@@ -57,7 +57,9 @@ class HomeView(View):
         if request.session.get('taiga_user_data') is None:
             return HttpResponseRedirect(reverse('emailTracker:login'))
         else:
-            return render(request, 'emailTracker/home.html')
+            return render(request, 'emailTracker/home.html', {
+                'user_logged': True
+            })
 
 
 class ResultsView(TemplateView):
@@ -104,8 +106,16 @@ def login(request):
 
     return render(request, 'emailTracker/login.html', {
         'form': form,
-        'authentication_error': authentication_error
+        'authentication_error': authentication_error,
+        'user_logged': request.session.get('taiga_user_data') is not None
     })
+
+
+def logout(request):
+
+    request.session.flush()
+
+    return HttpResponseRedirect(reverse('emailTracker:login'))
 
 
 def authentication(user, password):
