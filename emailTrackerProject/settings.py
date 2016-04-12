@@ -27,6 +27,8 @@ DEBUG = True
 
 # SECURE_SSL_REDIRECT = True
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
 ALLOWED_HOSTS = []
 
 
@@ -40,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'emailTracker.apps.EmailtrackerConfig',
-    'bootstrap3'
+    'crispy_forms'
 ]
 
 MIDDLEWARE_CLASSES = [
