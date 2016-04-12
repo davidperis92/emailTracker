@@ -8,9 +8,5 @@ urlpatterns = [
     url(r'^$', views.HomeView.as_view(), name='home'),
     url(r'^login/$', views.login, name='login'),
     url(r'^email/$', views.email, name='email'),
-    url(r'^results/', include([
-        url(r'^taiga_id/(?P<task_id>)$', views.ResultsView.get_emails_by_taskId),
-        url(r'^subject/(?P<subject>)$', views.ResultsView.get_emails_by_subject),
-        url(r'^sender/(?P<sender>)$', views.ResultsView.get_emails_by_sender),
-    ]), name='results'),
+    url(r'^results/', views.ResultsView.as_view(), name='results'),
 ]
