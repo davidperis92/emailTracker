@@ -18,7 +18,6 @@ def email(request):
         email_data = json.loads(request.body.decode())
         email_address_matcher = re.compile(r'\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b')
         sender = re.search(email_address_matcher, email_data['headers']['From']).group()
-
         if 'To' in email_data['headers']:
             receivers = re.findall(email_address_matcher, email_data['headers']['To'])
         else:
@@ -29,6 +28,15 @@ def email(request):
         else:
             copy_receivers = []
 
+        project_name_matcher = re.compile(r'\[[\[a-zA-Z0-9\s\]._%+-]+\]')
+        project_name = re.findall(project_name_matcher, email_data['headers']['Subject'])[0]
+        project_name = project_name[1:len(project_name)-1]
+
+        task_id_matcher = re.compile(r'\#[0-9]+\b')
+        task_id = re.findall(task_id_matcher, email_data['headers']['Subject'])[0]
+        task_id = task_id[1:len(task_id)]
+        #project_id = getProjectIdByName(project_name, request)
+        #import pdb; pdb.set_trace()
         text_html = text_plain = ''
         if email_data['html'] is not None:
             text_html = email_data['html']
@@ -38,6 +46,8 @@ def email(request):
         date = datetime.strptime(email_data['headers']['Date'], '%a, %d %b %Y %H:%M:%S %z')
 
         Email.objects.create(
+            project_name=project_name,
+            task_id=task_id,
             sender=sender,
             receivers=receivers,
             copy_receivers=copy_receivers,
@@ -67,17 +77,27 @@ class ResultsView(TemplateView):
     template_name = 'emailTracker/results.html'
     context_object_name = 'email_list'
 
-    def get_emails_by_taskId(request, task_id):
-        emails = Email.objects.filter(task_id=task_id)
-        return emails
 
-    def get_emails_by_subject(request, subject):
-        emails = Email.objects.filter(subject__icontains=subject)
-        return emails
+    def get_context_data(self, **kwargs):
+        context = super(ResultsView, self).get_context_data(**kwargs)
+        if self.request.session.get('taiga_user_data') is None:
+            return HttpResponseRedirect(reverse('emailTracker:login'))
+        else:
+            parameter = self.request.GET.get('task_id', '')
+            if parameter != '':
+                context['email_list'] = get_emails_by_taskId(parameter)
+                return context
 
-    def get_emails_by_sender(request, sender):
-        emails = Email.objects.filter(sender__icontains=sender)
-        return emails
+            parameter = self.request.GET.get('subject', '')
+            if parameter != '':
+                context['email_list'] = get_emails_by_subject(parameter)
+                return context
+
+            parameter = self.request.GET.get('project_name', '')
+            if parameter != '':
+                context['email_list'] = get_emails_by_project_name(parameter)
+                return context
+
 
 
 def login(request):
@@ -95,7 +115,6 @@ def login(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             auth = authentication(username, password)
-
             if auth.status_code == requests.codes.ok:
                 taiga_user_data = auth.json()
                 request.session.flush()
@@ -128,6 +147,28 @@ def authentication(user, password):
 
     return requests.post('http://178.62.226.174:81/api/v1/auth', data=data)
 
+def getProjectIdByName(name, request):
+    data = {
+        "Content-Type": 'application/json',
+        "Authorization": 'Bearer '+ request.session['taiga_user_data']['auth_token']
+    }
+    projects = requests.get('http://178.62.226.174:81/api/v1/projects/', data=data)
+    for project in projects:
+        if(project['name'] == name):
+            return project['id']
+    return null
 
 def getTask(task_id):
     return requests.get('http://178.62.226.174:81/api/v1/tasks/' + task_id)
+
+def get_emails_by_taskId(task_id):
+    emails = Email.objects.filter(task_id=task_id)
+    return emails
+
+def get_emails_by_subject(subject):
+    emails = Email.objects.filter(subject__icontains=subject)
+    return emails
+
+def get_emails_by_project_name(project_name):
+    emails = Email.objects.filter(project_name__icontains=project_name)
+    return emails

@@ -1,9 +1,14 @@
-<h1>{{ taiga_user.username }}</h1>
+{% extends "base.html" %}
+{% load staticfiles %}
 
-{% include "components/searcher.html" %}
+{% block headers %}
+    <link rel="stylesheet" type="text/css" href="{% static 'emailTracker/css/results.css' %}">
+{% endblock headers %}
 
-<div>
-    {% for email in email_list %}
-        
-    {% endfor %}
-</div>
+{% block content %}
+    <h1>{{ taiga_user.username }}</h1>
+
+    {% include "components/searcher.html" %}
+    {% include "components/emails_list.html" %}
+
+{% endblock content %}

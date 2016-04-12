@@ -11,7 +11,7 @@ from django.contrib.postgres.fields import ArrayField
 
 class Email(models.Model):
     task_id = models.IntegerField(blank=True, null=True)
-    project_id = models.IntegerField(blank=True, null=True)
+    project_name = models.CharField(max_length=200, blank=True, null=True)
     user_story_id = models.IntegerField(blank=True, null=True)
 
     sender = models.EmailField()
