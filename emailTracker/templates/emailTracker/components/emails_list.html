@@ -23,7 +23,17 @@
                 <h4>Asunto:</h4><span>{{ email.subject }}</span>
             </div>
             <div class="email-data-row">
-                <h4>Texto:</h4><span>{{ email.text_plain }}</span>
+                <h4>Texto:</h4>
+                <div class="email-text-container">
+                    <script>
+                        var ht = `{{ email.text_html }}`;
+                        ht = ht.split('&lt;').join('<');
+                        ht = ht.split('&gt;').join('>');
+                        ht = ht.split('&quot;').join('');
+                        ht = ht.split('\n').join(' ');
+                        document.write(ht);
+                    </script>
+                </div>
             </div>
         </div>
     {% endfor %}

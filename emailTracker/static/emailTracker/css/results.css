@@ -19,6 +19,12 @@
     width: 980px;
 }
 
+.email-text-container {
+    display: table-cell;
+    width: 980px;
+    float: left;
+}
+
 h4 {
     display: table-cell;
     width: 200px;
