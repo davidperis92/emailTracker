@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load sass_tags %}
+
+{% block headers %}
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'emailTracker/css/email_details.scss' %}">
+{% endblock headers %}
+
+{% block content %}
+    <h1>{{ taiga_user.username }}</h1>
+
+    <div class="emails-container">
+        <div class="email-content">
+            <div class="email-data-row">
+                <h4>ID de la tarea:</h4><span>{{ email.task_id }}</span>
+            </div>
+            <div class="email-data-row">
+                <h4>Nombre del proyecto:</h4><span>{{ email.project_name }}</span>
+            </div>
+            <div class="email-data-row">
+                <h4>Fecha:</h4><span>{{ email.date }}</span>
+            </div>
+            <div class="email-data-row">
+                <h4>Email de origen:</h4><span>{{ email.sender }}</span>
+            </div>
+            <div class="email-data-row">
+                <h4>Emails de destino:</h4><span>{{ email.receivers }}</span>
+            </div>
+            <div class="email-data-row">
+                <h4>Emails de copia:</h4><span>{{ email.copy_receivers }}</span>
+            </div>
+            <div class="email-data-row">
+                <h4>Asunto:</h4><span>{{ email.subject }}</span>
+            </div>
+            <div class="email-data-row">
+                <h4>Texto:</h4>
+                <div class="email-text-container">
+                    <script>
+                        var ht = `{{ email.text_html }}`;
+                        ht = ht.split('&lt;').join('<');
+                        ht = ht.split('&gt;').join('>');
+                        ht = ht.split('&quot;').join('');
+                        ht = ht.split('\n').join(' ');
+                        document.write(ht);
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

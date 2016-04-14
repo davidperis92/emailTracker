@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'emailTracker.apps.EmailtrackerConfig',
-    'crispy_forms'
+    'crispy_forms',
+    'sass_processor',
 ]
 
 MIDDLEWARE_CLASSES = [
