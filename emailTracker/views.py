@@ -5,8 +5,10 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.views.generic import View, TemplateView
+from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import auth
+from django.contrib.auth.mixins import LoginRequiredMixin
 from emailTracker.forms import LoginForm
 from emailTracker.models import Email
 
@@ -35,8 +37,8 @@ def email(request):
         task_id_matcher = re.compile(r'\#[0-9]+\b')
         task_id = re.findall(task_id_matcher, email_data['headers']['Subject'])[0]
         task_id = task_id[1:len(task_id)]
-        #project_id = getProjectIdByName(project_name, request)
-        #import pdb; pdb.set_trace()
+        # project_id = getProjectIdByName(project_name, request)
+        # import pdb; pdb.set_trace()
         text_html = text_plain = ''
         if email_data['html'] is not None:
             text_html = email_data['html']
@@ -60,23 +62,16 @@ def email(request):
         return HttpResponse()
 
 
-class HomeView(View):
+class HomeView(LoginRequiredMixin, TemplateView):
 
-    def get(self, request, *args, **kwargs):
-
-        if request.session.get('taiga_user_data') is None:
-            return HttpResponseRedirect(reverse('emailTracker:login'))
-        else:
-            return render(request, 'emailTracker/home.html', {
-                'user_logged': True
-            })
+    login_url = '/emailTracker/login/'
+    template_name = 'emailTracker/home.html'
 
 
 class ResultsView(TemplateView):
     model = Email
     template_name = 'emailTracker/results.html'
     context_object_name = 'email_list'
-
 
     def get_context_data(self, **kwargs):
         context = super(ResultsView, self).get_context_data(**kwargs)
@@ -99,10 +94,7 @@ class ResultsView(TemplateView):
                 return context
 
 
-
 def login(request):
-
-    authentication_error = False
 
     if request.method == 'GET':
         form = LoginForm()
@@ -114,19 +106,15 @@ def login(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            auth = authentication(username, password)
-            if auth.status_code == requests.codes.ok:
-                taiga_user_data = auth.json()
-                request.session.flush()
-                request.session['taiga_user_data'] = taiga_user_data
+            user = auth.authenticate(taiga_user=username, taiga_pass=password)
+            if user is not None:
+                auth.login(request, user)
                 return HttpResponseRedirect(reverse('emailTracker:home'))
             else:
-                authentication_error = True
+                form.add_error(None, 'Usuario o contraseña incorrectos')
 
     return render(request, 'emailTracker/login.html', {
         'form': form,
-        'authentication_error': authentication_error,
-        'user_logged': request.session.get('taiga_user_data') is not None
     })
 
 
@@ -137,37 +125,31 @@ def logout(request):
     return HttpResponseRedirect(reverse('emailTracker:login'))
 
 
-def authentication(user, password):
-
-    data = {
-        "type": "normal",
-        "username": user,
-        "password": password
-    }
-
-    return requests.post('http://178.62.226.174:81/api/v1/auth', data=data)
-
 def getProjectIdByName(name, request):
     data = {
         "Content-Type": 'application/json',
-        "Authorization": 'Bearer '+ request.session['taiga_user_data']['auth_token']
+        "Authorization": 'Bearer ' + request.session['taiga_user_data']['auth_token']
     }
     projects = requests.get('http://178.62.226.174:81/api/v1/projects/', data=data)
     for project in projects:
         if(project['name'] == name):
             return project['id']
-    return null
+    return None
+
 
 def getTask(task_id):
     return requests.get('http://178.62.226.174:81/api/v1/tasks/' + task_id)
+
 
 def get_emails_by_taskId(task_id):
     emails = Email.objects.filter(task_id=task_id)
     return emails
 
+
 def get_emails_by_subject(subject):
     emails = Email.objects.filter(subject__icontains=subject)
     return emails
+
 
 def get_emails_by_project_name(project_name):
     emails = Email.objects.filter(project_name__icontains=project_name)

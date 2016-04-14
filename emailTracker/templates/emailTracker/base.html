@@ -3,7 +3,7 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-    <!-- Custom Page headers --> 
+    <!-- Custom Page headers -->
     {% block headers %}{% endblock headers %}
 
     <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
@@ -18,7 +18,7 @@
           <a href="{% url 'emailTracker:home' %}" class="navbar-brand">Taiga Email Tracker</a>
         </div>
         <ul class="nav navbar-nav navbar-right">
-          {% if user_logged %}
+          {% if user.is_authenticated %}
             <li><p class="navbar-text"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ request.session.taiga_user_data.full_name }}</p></li>
             <li>
               <p class="navbar-btn">
