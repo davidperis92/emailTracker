@@ -1,30 +1,12 @@
-<div class="emails-container">
+<table class="emails-list-container">
     {% for email in email_list %}
-        <div class="email-content">
-            <div class="email-data-row">
-                <h4>ID de la tarea:</h4><span>{{ email.task_id }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Nombre del proyecto:</h4><span>{{ email.project_name }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Fecha:</h4><span>{{ email.date }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Email de origen:</h4><span>{{ email.sender }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Emails de destino:</h4><span>{{ email.receivers }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Emails de copia:</h4><span>{{ email.copy_receivers }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Asunto:</h4><span>{{ email.subject }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Texto:</h4><span>{{ email.text_plain }}</span>
-            </div>
-        </div>
+        <tr class="email-content" onclick="window.location.href='/emailTracker/details/{{ email.pk }}'">
+            <td>
+                <div class="subject">{{ email.subject }}</div>
+            </td>
+            <td>
+                <div class="date">{{ email.date }}</div>
+            </td>
+        </tr>
     {% endfor %}
-</div>
+</table>

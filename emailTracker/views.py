@@ -92,6 +92,13 @@ class ResultsView(LoginRequiredMixin, TemplateView):
             context['email_list'] = get_emails_by_project_name(parameter)
             return context
 
+def emailDetail(request, email_id):
+    try:
+        email = Email.objects.get(pk=email_id)
+    except Email.DoesNotExist:
+        raise Http404("Email does not exist")
+    return render(request, 'emailTracker/email_details.html', {'email': email})
+
 
 def login(request):
 

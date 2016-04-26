@@ -1,14 +1,11 @@
 {% extends "base.html" %}
-{% load staticfiles %}
-
-{% block headers %}
-    <link rel="stylesheet" type="text/css" href="{% static 'emailTracker/css/results.css' %}">
-{% endblock headers %}
 
 {% block content %}
-    <h1>{{ taiga_user.username }}</h1>
+    <div class="container results">
+        <h1>{{ taiga_user.username }}</h1>
 
-    {% include "components/searcher.html" %}
-    {% include "components/emails_list.html" %}
+        {% include "components/searcher.html" %}
+        {% include "components/emails_list.html" %}
+    </div>
 
 {% endblock content %}
