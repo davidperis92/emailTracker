@@ -11,6 +11,7 @@ from django.contrib import auth
 from django.contrib.auth.mixins import LoginRequiredMixin
 from emailTracker.forms import LoginForm
 from emailTracker.models import Email
+from emailTracker import taiga_auth
 
 
 @csrf_exempt
@@ -38,7 +39,7 @@ def email(request):
         task_id = re.findall(task_id_matcher, email_data['headers']['Subject'])[0]
         task_id = task_id[1:len(task_id)]
         # project_id = getProjectIdByName(project_name, request)
-        # import pdb; pdb.set_trace()
+
         text_html = text_plain = ''
         if email_data['html'] is not None:
             text_html = email_data['html']
@@ -64,34 +65,32 @@ def email(request):
 
 class HomeView(LoginRequiredMixin, TemplateView):
 
-    login_url = '/emailTracker/login/'
     template_name = 'emailTracker/home.html'
 
 
-class ResultsView(TemplateView):
+class ResultsView(LoginRequiredMixin, TemplateView):
+
     model = Email
     template_name = 'emailTracker/results.html'
     context_object_name = 'email_list'
 
     def get_context_data(self, **kwargs):
         context = super(ResultsView, self).get_context_data(**kwargs)
-        if self.request.session.get('taiga_user_data') is None:
-            return HttpResponseRedirect(reverse('emailTracker:login'))
-        else:
-            parameter = self.request.GET.get('task_id', '')
-            if parameter != '':
-                context['email_list'] = get_emails_by_taskId(parameter)
-                return context
 
-            parameter = self.request.GET.get('subject', '')
-            if parameter != '':
-                context['email_list'] = get_emails_by_subject(parameter)
-                return context
+        parameter = self.request.GET.get('task_id', '')
+        if parameter != '':
+            context['email_list'] = get_emails_by_taskId(parameter)
+            return context
 
-            parameter = self.request.GET.get('project_name', '')
-            if parameter != '':
-                context['email_list'] = get_emails_by_project_name(parameter)
-                return context
+        parameter = self.request.GET.get('subject', '')
+        if parameter != '':
+            context['email_list'] = get_emails_by_subject(parameter)
+            return context
+
+        parameter = self.request.GET.get('project_name', '')
+        if parameter != '':
+            context['email_list'] = get_emails_by_project_name(parameter)
+            return context
 
 
 def login(request):
@@ -100,16 +99,20 @@ def login(request):
         form = LoginForm()
         form.helper.form_action = reverse('emailTracker:login')
     else:
-        # A POST request: Handle Form Upload
-        form = LoginForm(request.POST)  # Bind data from request.POST into a PostForm
-        # If data is valid, proceeds to create a new post and redirect the user
+        form = LoginForm(request.POST)
+
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user = auth.authenticate(taiga_user=username, taiga_pass=password)
-            if user is not None:
-                auth.login(request, user)
-                return HttpResponseRedirect(reverse('emailTracker:home'))
+            taiga_auth_info = taiga_auth.authenticate(username, password)
+
+            if taiga_auth_info.status_code == requests.codes.ok:
+                user = auth.authenticate(remote_user=username)
+
+                if user is not None:
+                    auth.login(request, user)
+                    request.session['taiga_user_data'] = taiga_auth_info.json()
+                    return HttpResponseRedirect(reverse('emailTracker:home'))
             else:
                 form.add_error(None, 'Usuario o contraseña incorrectos')
 
@@ -120,8 +123,7 @@ def login(request):
 
 def logout(request):
 
-    request.session.flush()
-
+    auth.logout(request)
     return HttpResponseRedirect(reverse('emailTracker:login'))
 
 
