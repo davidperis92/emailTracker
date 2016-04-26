@@ -1,0 +1,34 @@
+.emails-container {
+    width: 1200px;
+    display: inline-block;
+}
+
+.email-content {
+    margin-bottom: 50px;
+}
+
+.email-data-row {
+    width: 100%;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.email-data-row span {
+    display: table-cell;
+    float: left;
+    width: 980px;
+}
+
+.email-text-container {
+    display: table-cell;
+    width: 980px;
+    float: left;
+}
+
+h4 {
+    display: table-cell;
+    width: 200px;
+    float: left;
+    margin: 0;
+    margin-right: 20px;
+}

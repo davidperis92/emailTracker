@@ -4,6 +4,6 @@
 	"sources": [
 		"../../../../home/david/Proyectos/emailTrackerProject/emailTracker/static/emailTracker/css/components/emails_list.scss"
 	],
-	"mappings": "",
+	"mappings": "AAAA,AACI,iBADa,CACb,cAAc,AACT,UAAW,CAAA,AAAA,GAAG,EAAE;EACb,UAAU,EAAE,IAAK,GACpB;;AAJT,AACI,iBADa,CACb,cAAc,AAIT,UAAW,CAAA,AAAA,IAAI,EAAE;EACd,gBAAgB,EAAE,KAAM,GAC3B",
 	"names": []
 }

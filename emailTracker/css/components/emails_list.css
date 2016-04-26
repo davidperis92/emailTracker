@@ -1,2 +1,7 @@
+.emails-container .email-content:nth-child(odd) {
+  background: grey; }
+
+.emails-container .email-content:nth-child(even) {
+  background-color: white; }
 
 /*# sourceMappingURL=../../../../../../../../../static/emailTracker/css/components/emails_list.css.map */

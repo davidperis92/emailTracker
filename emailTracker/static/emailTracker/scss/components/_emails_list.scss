@@ -1,0 +1,14 @@
+.emails-list-container {
+    .email-content {
+        cursor: pointer;
+        &:nth-child(odd) {
+            background: lightgrey;
+        }
+        &:nth-child(even) {
+            background-color: white;
+        }
+        td {
+            padding: 10px 15px;
+        }
+    }
+}

@@ -1,14 +1,10 @@
 {% extends "base.html" %}
-{% load sass_tags %}
-
-{% block headers %}
-    <link rel="stylesheet" type="text/css" href="{% sass_src 'emailTracker/css/email_details.scss' %}">
-{% endblock headers %}
 
 {% block content %}
-    <h1>{{ taiga_user.username }}</h1>
 
-    <div class="emails-container">
+    <div class="container email-details">
+        <h1>{{ taiga_user.username }}</h1>
+
         <div class="email-content">
             <div class="email-data-row">
                 <h4>ID de la tarea:</h4><span>{{ email.task_id }}</span>
@@ -46,5 +42,4 @@
             </div>
         </div>
     </div>
-
 {% endblock content %}

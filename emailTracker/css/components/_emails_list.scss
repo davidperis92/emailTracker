@@ -1,0 +1,10 @@
+.emails-container {
+    .email-content {
+        &:nth-child(odd) {
+            background: grey;
+        }
+        &:nth-child(even) {
+            background-color: white;
+        }
+    }
+}

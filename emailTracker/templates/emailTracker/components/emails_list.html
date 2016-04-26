@@ -1,14 +1,12 @@
-<div class="emails-container">
+<table class="emails-list-container">
     {% for email in email_list %}
-        <div class="email-content">
-            <a href='/emailTracker/details/{{ email.pk }}'>
-                <div class="email-data-row">
-                    <h4>Asunto:</h4><span>{{ email.subject }}</span>
-                </div>
-                <div class="email-data-row">
-                    <h4>Fecha:</h4><span>{{ email.date }}</span>
-                </div>
-            </a>
-        </div>
+        <tr class="email-content" onclick="window.location.href='/emailTracker/details/{{ email.pk }}'">
+            <td>
+                <div class="subject">{{ email.subject }}</div>
+            </td>
+            <td>
+                <div class="date">{{ email.date }}</div>
+            </td>
+        </tr>
     {% endfor %}
-</div>
+</table>
