@@ -22,7 +22,7 @@
           <a href="{% url 'emailTracker:home' %}" class="navbar-brand">Taiga Email Tracker</a>
         </div>
         <ul class="nav navbar-nav navbar-right">
-          {% if user_logged %}
+          {% if user.is_authenticated %}
             <li><p class="navbar-text"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ request.session.taiga_user_data.full_name }}</p></li>
             <li>
               <p class="navbar-btn">
