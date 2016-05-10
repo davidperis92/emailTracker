@@ -2,6 +2,7 @@ import requests
 import json
 import re
 from datetime import datetime
+from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -10,8 +11,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.contrib.auth.mixins import LoginRequiredMixin
 from emailTracker.forms import LoginForm
-from emailTracker.models import Email
-from emailTracker import taiga_auth
+from emailTracker.models import Email, UserStory, Task, LogTask, LogUserStory
+from emailTracker import taiga_auth, validators
+
 
 
 @csrf_exempt
@@ -62,10 +64,36 @@ def email(request):
 
         return HttpResponse()
 
+@csrf_exempt
+def taiga_hook(request):
+
+    if request.method == 'POST':
+        #import pdb; pdb.set_trace()
+        signature = request.META['HTTP_X_TAIGA_WEBHOOK_SIGNATURE']
+        taiga_json = json.loads(request.body.decode())
+        if validators.verify_signature(settings.WEBHOOK_SECRET_KEY, request.body, signature):
+
+            taiga_type = taiga_json['type']
+
+            if   taiga_type == 'userstory':
+                LogUserStory.create_from_json( taiga_json )
+            elif taiga_type == 'task':
+                LogTask.create_from_json( taiga_json )
+
+            return HttpResponse()
+
 
 class HomeView(LoginRequiredMixin, TemplateView):
 
+    model = Email
     template_name = 'emailTracker/home.html'
+    context_object_name = 'email_list'
+
+    def get_context_data(self, **kwargs):
+        context                 = super(HomeView, self).get_context_data(**kwargs)
+        context['email_list']   = Email.objects.order_by('-date').all()
+        return context
+
 
 
 class ResultsView(LoginRequiredMixin, TemplateView):
@@ -151,15 +179,15 @@ def getTask(task_id):
 
 
 def get_emails_by_taskId(task_id):
-    emails = Email.objects.filter(task_id=task_id)
+    emails = Email.objects.order_by('-date').filter(task_id=task_id)
     return emails
 
 
 def get_emails_by_subject(subject):
-    emails = Email.objects.filter(subject__icontains=subject)
+    emails = Email.objects.order_by('-date').filter(subject__icontains=subject)
     return emails
 
 
 def get_emails_by_project_name(project_name):
-    emails = Email.objects.filter(project_name__icontains=project_name)
+    emails = Email.objects.order_by('-date').filter(project_name__icontains=project_name)
     return emails

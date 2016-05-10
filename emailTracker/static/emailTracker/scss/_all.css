@@ -1,64 +1,56 @@
-.emails-list-container .email-content {
-  cursor: pointer; }
-  .emails-list-container .email-content:nth-child(odd) {
-    background: lightgrey; }
-  .emails-list-container .email-content:nth-child(even) {
-    background-color: white; }
-  .emails-list-container .email-content td {
-    padding: 10px 15px; }
+.emails-list-container {
+  width: 100%; }
+  .emails-list-container .email-content {
+    cursor: pointer; }
+    .emails-list-container .email-content:nth-child(odd) {
+      background: #f0f0f0; }
+    .emails-list-container .email-content:nth-child(even) {
+      background-color: #c6cace; }
+    .emails-list-container .email-content td {
+      padding: 10px 15px; }
 
-.emails-container {
+.email-details .emails-container {
   width: 1200px;
   display: inline-block; }
 
-.email-content {
+.email-details .emails-list-container {
+  width: 100%; }
+
+.email-details .email-data-row:nth-child(odd) {
+  background: #f0f0f0; }
+
+.email-details .email-data-row:nth-child(even) {
+  background-color: #c6cace; }
+
+.email-details .email-data-row td {
+  padding: 5px 15px; }
+
+.email-details .email-data-row td:nth-child(odd) {
+  border-right: 1px solid #aeb5bc; }
+
+.results .emails-container {
+  width: 1200px;
+  display: inline-block; }
+
+.results .email-content {
   margin-bottom: 50px; }
 
-.email-data-row {
+.results .email-data-row {
   width: 100%;
   display: inline-block;
   margin-bottom: 10px; }
 
-.email-data-row span {
+.results .email-data-row span {
   display: table-cell;
   float: left;
   width: 980px; }
 
-.email-text-container {
+.results .email-text-container {
   display: table-cell;
   width: 980px;
   float: left; }
 
-h4 {
-  display: table-cell;
-  width: 200px;
-  float: left;
-  margin: 0;
-  margin-right: 20px; }
-
-.emails-container {
-  width: 1200px;
-  display: inline-block; }
-
-.email-content {
-  margin-bottom: 50px; }
-
-.email-data-row {
-  width: 100%;
-  display: inline-block;
-  margin-bottom: 10px; }
-
-.email-data-row span {
-  display: table-cell;
-  float: left;
-  width: 980px; }
-
-.email-text-container {
-  display: table-cell;
-  width: 980px;
-  float: left; }
-
-h4 {
+.results h4 {
   display: table-cell;
   width: 200px;
   float: left;

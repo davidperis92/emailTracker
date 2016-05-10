@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% include "components/searcher.html" %}
+    <div class="container results">
+
+        {% include "components/_searcher.html" %}
+        {% include "components/_emails_list.html" %}
+    </div>
+
 {% endblock content %}

@@ -22,6 +22,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '*#vi9occj^9bz#2x_(m(x_+(*ge-c)g=%y7-_c6(du7n&zttxl'
 
+WEBHOOK_SECRET_KEY = 'da39a3ee5e6b4b0d3255bfef95601890afd80709'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
