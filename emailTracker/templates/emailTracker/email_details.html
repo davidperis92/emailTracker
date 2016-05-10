@@ -6,39 +6,74 @@
         <h1>{{ taiga_user.username }}</h1>
 
         <div class="email-content">
-            <div class="email-data-row">
-                <h4>ID de la tarea:</h4><span>{{ email.task_id }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Nombre del proyecto:</h4><span>{{ email.project_name }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Fecha:</h4><span>{{ email.date }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Email de origen:</h4><span>{{ email.sender }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Emails de destino:</h4><span>{{ email.receivers }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Emails de copia:</h4><span>{{ email.copy_receivers }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Asunto:</h4><span>{{ email.subject }}</span>
-            </div>
-            <div class="email-data-row">
-                <h4>Texto:</h4>
-                <div class="email-text-container">
-                    <script>
-                        var ht = `{{ email.text_html }}`;
-                        ht = ht.split('&lt;').join('<');
-                        ht = ht.split('&gt;').join('>');
-                        ht = ht.split('&quot;').join('');
-                        ht = ht.split('\n').join(' ');
-                        document.write(ht);
-                    </script>
-                </div>
+            <table class="emails-list-container">
+                <tr class="email-data-row">
+                    <td>
+                        <div class="header">ID de la tarea</div>
+                    </td>
+                    <td>
+                        <div class="value">{{ email.task_id }}</div>
+                    </td>
+                </tr>
+                <tr class="email-data-row">
+                    <td>
+                        <div class="header">Nombre del proyecto</div>
+                    </td>
+                    <td>
+                        <div class="value">{{ email.project_name }}</div>
+                    </td>
+                </tr>
+                <tr class="email-data-row">
+                    <td>
+                        <div class="header">Fecha</div>
+                    </td>
+                    <td>
+                        <div class="value">{{ email.date }}</div>
+                    </td>
+                </tr>
+                <tr class="email-data-row">
+                    <td>
+                        <div class="header">Email de origen</div>
+                    </td>
+                    <td>
+                        <div class="value">{{ email.sender }}</div>
+                    </td>
+                </tr>
+                <tr class="email-data-row">
+                    <td>
+                        <div class="header">Emails de destino</div>
+                    </td>
+                    <td>
+                        <div class="value">{{ email.receivers }}</div>
+                    </td>
+                </tr>
+                <tr class="email-data-row">
+                    <td>
+                        <div class="header">Emails de copia</div>
+                    </td>
+                    <td>
+                        <div class="value">{{ email.copy_receivers }}</div>
+                    </td>
+                </tr>
+                <tr class="email-data-row">
+                    <td>
+                        <div class="header">Asunto</div>
+                    </td>
+                    <td>
+                        <div class="value">{{ email.subject }}</div>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="email-text-container">
+                <script>
+                    var ht = `{{ email.text_html }}`;
+                    ht = ht.split('&lt;').join('<');
+                    ht = ht.split('&gt;').join('>');
+                    ht = ht.split('&quot;').join('');
+                    ht = ht.split('\n').join(' ');
+                    document.write(ht);
+                </script>
             </div>
         </div>
     </div>

@@ -1,0 +1,25 @@
+.email-details {
+    .emails-container {
+        width: 1200px;
+        display: inline-block;
+    }
+
+    .emails-list-container {
+        width: 100%;
+    }
+
+    .email-data-row {
+        &:nth-child(odd) {
+            background: $color-ED-Primary;
+        }
+        &:nth-child(even) {
+            background-color: $color-ED-Secondary;
+        }
+        td {
+            padding: 5px 15px;
+        }
+        td:nth-child(odd) {
+            border-right: 1px solid $color-ED-Border;
+        }
+    }
+}

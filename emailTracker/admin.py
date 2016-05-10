@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Email
+from .models import Email, LogTask, LogUserStory, Task, UserStory, Project, TaigaUser
 
 
 # class EmailUserAdmin(admin.ModelAdmin):
@@ -31,3 +31,9 @@ from .models import Email
 # admin.site.register(Email, EmailAdmin)
 # admin.site.register(EmailUser, EmailUserAdmin)
 admin.site.register(Email)
+admin.site.register(LogTask)
+admin.site.register(LogUserStory)
+admin.site.register(Task)
+admin.site.register(UserStory)
+admin.site.register(Project)
+admin.site.register(TaigaUser)

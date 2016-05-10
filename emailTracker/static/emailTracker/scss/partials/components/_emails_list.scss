@@ -1,11 +1,12 @@
 .emails-list-container {
+    width: 100%;
     .email-content {
         cursor: pointer;
         &:nth-child(odd) {
-            background: lightgrey;
+            background: $color-EL-Primary;
         }
         &:nth-child(even) {
-            background-color: white;
+            background-color: $color-EL-Secondary;
         }
         td {
             padding: 10px 15px;
